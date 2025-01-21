@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Event
 from django.urls import reverse
+from django.contrib import messages
 def delete_event(request, event_id):
     if request.method == 'POST':
         event= Event.objects.get(id=event_id)
@@ -39,3 +40,15 @@ def update_event(request , event_id):
         return redirect('category_list')
     else:
         return render(request,'event_management_system_app/update_event.html', {'event': event})
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'event_management_system_app/category_list.html', {'categories': categories})
+def delete_category(request, category_id):
+    category = Category.objects.get(pk=category_id)
+    if category.event_set.exists():
+        messages.error(
+            request, "You cannot delete this category as it contains events.")
+    else:
+        category.delete()
+        messages.success(request, "Category deleted successfully.")
+    return redirect('category_list')
