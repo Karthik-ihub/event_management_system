@@ -19,3 +19,8 @@ def create_event(request):
         organizer = request.POST.get('organizer')
 
         Category = Category.objects.get(pk=Category_id)
+        event = Event(name=name, category=Category, start_date=start_date, end_date=end_date, priority=priority , description=description, location=location, organizer=organizer)
+        return redirect('category_list')
+    else:
+        categories = Category.objects.all()
+        return render(request, 'create_event.html', {'categories': categories})
