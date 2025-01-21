@@ -24,3 +24,18 @@ def create_event(request):
     else:
         categories = Category.objects.all()
         return render(request, 'create_event.html', {'categories': categories})
+    
+def update_event(request , event_id):
+    event = Event.objects.get(pk=event_id)
+    if request.method == 'POST':
+        event.name = request.POST.get('name')
+        event.start_date = request.POST.get('start_date')
+        event.end_date = request.POST.get('end_date')
+        event.priority = request.POST.get('priority')
+        event.description = request.POST.get('description')
+        event.location = request.POST.get('location')
+        event.organizer = request.POST.get('organizer')
+        event.save()
+        return redirect('category_list')
+    else:
+        return render(request,'event_management_system_app/update_event.html', {'event': event})
