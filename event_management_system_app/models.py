@@ -10,5 +10,6 @@ class Event(models.Model):
     end_date = models.DateTimeField()
     priority = models.IntegerField(default=1)
     description = models.TextField(default='')
+    allocated_seats = models.IntegerField(default=0)
     location = models.CharField(max_length=255, default='')
     organizer = models.CharField(max_length=100, default='')

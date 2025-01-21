@@ -25,7 +25,7 @@ def create_event(request):
         description = request.POST.get('description')
         location = request.POST.get('location')
         organizer = request.POST.get('organizer')
-
+        allocated_seats = request.POST.get('allocated_seats')
         # Retrieve the Category object
         category = Category.objects.get(pk=category_id)
 
@@ -38,7 +38,8 @@ def create_event(request):
             priority=priority,
             description=description,
             location=location,
-            organizer=organizer
+            organizer=organizer,
+            allocated_seats=allocated_seats
         )
 
         # Redirect to the event list page
@@ -57,6 +58,7 @@ def update_event(request, event_id):
         event.end_date = request.POST.get('end_date')
         event.priority = request.POST.get('priority')
         event.description = request.POST.get('description')
+        event.allocated_seats = request.POST.get('allocated_seats')
         event.location = request.POST.get('location')
         event.organizer = request.POST.get('organizer')
         event.save()
