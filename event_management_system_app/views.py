@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Event
 from django.urls import reverse
 from django.contrib import messages
+from .models import Category
 def delete_event(request, event_id):
     if request.method == 'POST':
         event= Event.objects.get(id=event_id)
@@ -17,6 +18,7 @@ def create_event(request):
         priority = request.POST.get('priority')
         description = request.POST.get('description')
         location =  request.POST.get('location')
+        allocated_seats = request.POST.get('allocated_seats')
         organizer = request.POST.get('organizer')
 
         Category = Category.objects.get(pk=Category_id)
@@ -36,6 +38,7 @@ def update_event(request , event_id):
         event.description = request.POST.get('description')
         event.location = request.POST.get('location')
         event.organizer = request.POST.get('organizer')
+        event.allocated_seats = request.POST.get('allocated_seats')
         event.save()
         return redirect('category_list')
     else:
@@ -43,6 +46,14 @@ def update_event(request , event_id):
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'event_management_system_app/category_list.html', {'categories': categories})
+
+def create_category(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        Category.objects.create(name=name)
+        return redirect('category_list')
+    return render(request, 'event_management_system_app/create_category.html')
+
 def delete_category(request, category_id):
     category = Category.objects.get(pk=category_id)
     if category.event_set.exists():
