@@ -52,3 +52,16 @@ def delete_category(request, category_id):
         category.delete()
         messages.success(request, "Category deleted successfully.")
     return redirect('category_list')
+def category_events(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    events = category.event_set.all()
+    return render(request, 'event_management_system_app/category_events.html', {'category': category, 'events': events})
+def event_chart(request):
+    categories = Category.objects.all()
+    pending_counts = {}
+    for category in categories:
+        pending_counts[category.name] = Event.objects.filter(
+            category=category,
+            start_date__gt=timezone.now()
+        ).count()
+    return render(request, 'event_management_system_app/event_chart.html', {'pending_counts': pending_counts})
