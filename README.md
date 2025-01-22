@@ -1,4 +1,5 @@
 Event Management System
+
 Introduction
 This is a Python Django advanced project for managing events. The project uses pure Django and aims to provide a comprehensive event management platform.
 
@@ -8,21 +9,24 @@ Event creation, updating, and deletion
 Category management for events
 Viewing events by category
 Event statistics and charts
+
 Requirements
 Python 3.8+
 Django 3.2+
 pip packages: django, djangorestframework
+
 Installation
 Clone the repository: git clone (https://github.com/Karthik-ihub/event_management_system.git)
 Install the required packages: pip install -r requirements.txt
-Run the migrations: python [manage.py](http://_vscodecontentref_/1) migrate
-Start the development server: python [manage.py](http://_vscodecontentref_/2) runserver
+
+
 Usage
 Open a web browser and navigate to http://localhost:8000
 Register a new user or login with an existing account
 Create, update, or delete events
 Manage event categories
 View events by category and check event statistics
+
 Views
 create_category
 Handles the creation of new event categories.
