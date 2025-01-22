@@ -1,14 +1,18 @@
 from django.utils import timezone
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Event
-from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
-from .models import Category
+from .models import Category, Event
+from django.shortcuts import render, redirect
+from django.urls import reverse
+
+
 def delete_event(request, event_id):
     if request.method == 'POST':
-        event= Event.objects.get(id=event_id)
+        event = Event.objects.get(id=event_id)
         event.delete()
-    return redirect(reverse('cataegory_list'))
+    return redirect(reverse('category_list'))
+
+
 def create_event(request):
     if request.method == 'POST':
         # Retrieve data from the POST request
@@ -41,10 +45,12 @@ def create_event(request):
     else:
         categories = Category.objects.all()
         return render(request, 'event_management_system_app/create_event.html', {'categories': categories})
-    
-def update_event(request , event_id):
+
+
+def update_event(request, event_id):
     event = Event.objects.get(pk=event_id)
     if request.method == 'POST':
+        # Update event fields based on form data
         event.name = request.POST.get('name')
         event.start_date = request.POST.get('start_date')
         event.end_date = request.POST.get('end_date')
@@ -52,11 +58,12 @@ def update_event(request , event_id):
         event.description = request.POST.get('description')
         event.location = request.POST.get('location')
         event.organizer = request.POST.get('organizer')
-        event.allocated_seats = request.POST.get('allocated_seats')
         event.save()
         return redirect('category_list')
     else:
-        return render(request,'event_management_system_app/update_event.html', {'event': event})
+        # Render update event page with event data
+        return render(request, 'event_management_system_app/update_event.html', {'event': event})
+
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'event_management_system_app/category_list.html', {'categories': categories})
@@ -68,6 +75,7 @@ def create_category(request):
         return redirect('category_list')
     return render(request, 'event_management_system_app/create_category.html')
 
+
 def delete_category(request, category_id):
     category = Category.objects.get(pk=category_id)
     if category.event_set.exists():
@@ -77,10 +85,12 @@ def delete_category(request, category_id):
         category.delete()
         messages.success(request, "Category deleted successfully.")
     return redirect('category_list')
+
 def category_events(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     events = category.event_set.all()
     return render(request, 'event_management_system_app/category_events.html', {'category': category, 'events': events})
+
 def event_chart(request):
     categories = Category.objects.all()
     pending_counts = {}
