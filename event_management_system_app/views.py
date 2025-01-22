@@ -1,10 +1,82 @@
+from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
-from .models import Category, Event
+from django.contrib.auth import authenticate, login, logout
+
+from event_management_system_app.forms import ChangePasswordForm, CustomerProfile, LoginForm, RegistrationForm
+from .models import Category, Event , Customer
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
+# Registration Function
+def user_Regi(request):
+  if request.method == 'POST':
+    form = RegistrationForm(request.POST)
+    if form.is_valid():
+      form.save()
+      messages.success(request, 'Registration Successful!')
+      return HttpResponseRedirect('/login')
+  else:
+    form = RegistrationForm()
+  return render(request, 'event_management_system_app/registration.html', {'form':form})
+      
+# Login Function
+def user_Login(request):
+  if request.user.is_authenticated:
+    return HttpResponseRedirect('/')
+  else:
+    if request.method == 'POST':
+      form = LoginForm(request=request, data=request.POST)
+      if form.is_valid():
+        uname = form.cleaned_data.get('username')
+        upass = form.cleaned_data.get('password')
+        validUser = authenticate(username=uname, password=upass)
+        if validUser is not None:
+          login(request, validUser)
+          return HttpResponseRedirect('/')
+          messages.success(request, 'Login Successful!')
+    else:
+      form = LoginForm()
+  return render (request, 'event_management_system_app/login.html', {'form': form})
+  
+# User logout
+def user_Logout(request):
+  logout(request)
+  return HttpResponseRedirect('/login')
+  
+ 
+# Profile Function
+def user_Profile(request):
+  if request.method == 'POST':
+    usr = request.user
+    print(usr)
+    form = CustomerProfile(request.POST)
+    if form.is_valid():
+      name = form.cleaned_data.get('name')
+      locality = form.cleaned_data.get('locality')
+      city = form.cleaned_data.get('city')
+      state = form.cleaned_data.get('state')
+      zipcode = form.cleaned_data.get('zipcode')
+      cust = Customer(user=usr, name=name, locality=locality, city=city, state=state, zipcode = zipcode)
+      cust.save()
+      messages.success(request, 'Profile Set Successful!')
+      return HttpResponseRedirect('/address')
+  else:
+    form = CustomerProfile()
+  return render(request, 'myapp/profile.html', {'form': form})
+
+#Change Password Function
+def change_Password(request):
+  if request.method == 'POST':
+    form = ChangePasswordForm(user=request.user, data=request.POST)
+    if form.is_valid():
+      form.save()
+      messages.success(request, 'Password Has Been Changed Successful!')
+      return HttpResponseRedirect('/login')
+  else:
+    form = ChangePasswordForm(request.user)
+  return render(request, 'event_management_system_app/changepassword.html', {'form':form})
 
 def delete_event(request, event_id):
     if request.method == 'POST':
