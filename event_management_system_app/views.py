@@ -11,22 +11,36 @@ def delete_event(request, event_id):
     return redirect(reverse('cataegory_list'))
 def create_event(request):
     if request.method == 'POST':
+        # Retrieve data from the POST request
         name = request.POST.get('name')
-        Category_id = request.POST.get('category_id')
+        category_id = request.POST.get('category')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         priority = request.POST.get('priority')
         description = request.POST.get('description')
-        location =  request.POST.get('location')
-        allocated_seats = request.POST.get('allocated_seats')
+        location = request.POST.get('location')
         organizer = request.POST.get('organizer')
 
-        Category = Category.objects.get(pk=Category_id)
-        event = Event(name=name, category=Category, start_date=start_date, end_date=end_date, priority=priority , description=description, location=location, organizer=organizer)
+        # Retrieve the Category object
+        category = Category.objects.get(pk=category_id)
+
+        # Create the Event object
+        event = Event.objects.create(
+            name=name,
+            category=category,
+            start_date=start_date,
+            end_date=end_date,
+            priority=priority,
+            description=description,
+            location=location,
+            organizer=organizer
+        )
+
+        # Redirect to the event list page
         return redirect('category_list')
     else:
         categories = Category.objects.all()
-        return render(request, 'create_event.html', {'categories': categories})
+        return render(request, 'event_management_system_app/create_event.html', {'categories': categories})
     
 def update_event(request , event_id):
     event = Event.objects.get(pk=event_id)
