@@ -45,4 +45,3 @@ Feel free to fork this repository and contribute by submitting a pull request.
 License
 This project is licensed under the MIT License.
 
-Replace yourusername with your actual GitHub username in the clone URL.
