@@ -90,3 +90,7 @@ def event_chart(request):
             start_date__gt=timezone.now()
         ).count()
     return render(request, 'event_management_system_app/event_chart.html', {'pending_counts': pending_counts})
+
+def usereventlist(request):
+
+    return render(request, "event_management_system_app/user_event_view.html")
