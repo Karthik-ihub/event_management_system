@@ -91,6 +91,39 @@ def event_chart(request):
         ).count()
     return render(request, 'event_management_system_app/event_chart.html', {'pending_counts': pending_counts})
 
-def usereventlist(request):
 
-    return render(request, "event_management_system_app/user_event_view.html")
+def usereventlist(request):
+    """
+    View to display the list of events to the user.
+    """
+    events = Event.objects.all().order_by('start_date')
+    context = {
+        'events': events
+    }
+    return render(request, 'event_management_system_app/user_event_view.html', context)
+
+def event_details(request, event_id):
+    """
+    View to display detailed information about a specific event.
+    """
+    event = get_object_or_404(Event, id=event_id)
+    context = {
+        'event': event
+    }
+    return render(request, 'event_management_system_app/event_details.html', context)
+
+def register_event(request, event_id):
+    """
+    View to handle event registration by a user.
+    """
+    event = get_object_or_404(Event, id=event_id)
+
+    # Example logic to handle registration (adjust as per your requirement)
+    if event.allocated_seats > 0:
+        event.allocated_seats -= 1
+        event.save()
+        messages.success(request, f'You have successfully registered for {event.name}.')
+    else:
+        messages.error(request, 'Sorry, this event is fully booked.')
+
+    return redirect('event_list')

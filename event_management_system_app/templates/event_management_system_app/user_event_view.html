@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event List</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Event List</h2>
+        <br>
+        {% if events %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Event Name</th>
+                            <th>Category</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Location</th>
+                            <th>Organizer</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ event.name }}</td>
+                                <td>{{ event.category.name }}</td>
+                                <td>{{ event.start_date|date:"d M Y, h:i A" }}</td>
+                                <td>{{ event.end_date|date:"d M Y, h:i A" }}</td>
+                                <td>{{ event.location }}</td>
+                                <td>{{ event.organizer }}</td>
+                                <td>
+                                    <a href="{% url 'event_details' event.id %}" class="btn btn-info btn-sm">View</a>
+                                    <a href="{% url 'register_event' event.id %}" class="btn btn-success btn-sm">Register</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center">No events available at the moment. Please check back later.</p>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS (Optional - for certain Bootstrap features like dropdowns, modals, etc.) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
